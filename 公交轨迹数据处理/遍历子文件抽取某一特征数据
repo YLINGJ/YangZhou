@@ -1,0 +1,42 @@
+#!/user/bin/env python3
+# -*- coding: utf-8 -*-
+import os
+import re
+import datetime
+import numpy as np
+import pandas as pd
+
+starttime = datetime.datetime.now()	# 运行时间统计
+####这个代码用来筛选所有的22路车
+if __name__ == '__main__':
+    filenames_in = 'F:\data\sub'  # 输入文件的文件地址
+    filenames_out = 'F:\data\线路筛选子文件27'  # 新文件的地址！！！！！
+    pathDir = os.listdir(filenames_in)
+    for allDir in pathDir:
+        child = re.findall(r"(.+?).csv", allDir)  # 正则的方式读取文件名，去扩展名
+        if len(child) >= 0:  # 去掉没用的系统文件
+            newfile = ''
+            needdate = child  #### 这个就是所要的文件名
+        domain1 = os.path.abspath(filenames_in)  # 待处理文件位置
+        info = os.path.join(domain1, allDir)  # 拼接出待处理文件名字
+
+        # ------------数据处理过程---------------
+        print(info,"开始处理")
+        # df = pd.DataFrame(pd.read_csv(info, index_col=0))   # 读取文件数据，以第一列为索引
+        # df = df.iloc[:, :-1]    # 删除最后一列数据
+        sub_GPS = pd.read_csv(info,header=None,names=['???"BUSRDID"', 'DATATYPE', 'ROUTEID', 'SUBROUTEID', 'PRODUCTID', 'STATIONSEQNUM', 'STATIONNUM', 'ISARRLFT', 'ACTDATETIME', 'RECDATETIME', 'WRITEID', 'ISAPPEND', 'BUSSID', 'LONGITUDE', 'LATITUDE', 'ALTITUDE', 'GPSSPEED', 'SENSORSPEED', 'ROTATIONANGLE', 'STATIONTYPE', 'ISMANULOPT', 'PACKCODE', 'SMCODE', 'ONPNUM', 'OFFPNUM', 'LEFTPNUM', 'TPTDATA', 'DOORSTATE', 'PECCANCYTYPE', 'PECCANCYTIME', 'STANDARDVALUE', 'PECCANCYVALUE', 'GPSMILE', 'RESERVECHAR1', 'RESERVECHAR2', 'RESERVECHAR3', 'RESERVECHAR4', 'RESERVECHAR5', 'RESERVECHAR6', 'RESERVECHAR7', 'RESERVECHAR8', 'RESERVECHAR9', 'RESERVECHAR10', 'ISSVRAPPEND', 'SVRAPPENDTIME', 'PECCANCYSTARTTIME', 'PECCANCYENDTIME', 'PECCANCYMAXVALUE', 'PECCANCYAVGVALUE', 'RESERVECHAR11', 'RESERVECHAR12', 'RESERVECHAR13', 'RESERVECHAR14', 'RESERVECHAR15', 'RESERVECHAR16', 'RESERVECHAR17', 'RESERVECHAR18', 'RESERVECHAR19', 'RESERVECHAR20', 'CONTENT', 'VEHICLESTATUS', 'GPSSTATE', 'SENSORMILEAGE', 'FILEPATH', 'CUSTOMDATA1', 'CUSTOMDATA2', 'CUSTOMDATA3', 'CUSTOMDATA4', 'CUSTOMDATA5', 'SEQUENCESWITCHTYPEFLAG'],encoding='gbk')
+        
+        ###!!!!!特征命令行
+        GPS_22=sub_GPS[(sub_GPS['ROUTEID']==1027)]
+        
+        
+        df = pd.DataFrame(GPS_22)#转换为DF格式
+        #df = pd.DataFrame(pd.read_csv(info, index_col=0, usecols=[0, 1, 3, 4, 5, 6, 7, 8, 10]))  # 选取固定列的值生成新表
+        # print(df)
+        domain2 = os.path.abspath(filenames_out)  # 处理完文件保存地址
+        outfo = os.path.join(domain2, allDir)  # 拼接出新文件名字
+        df.to_csv(outfo,index=False,header=None,encoding='utf-8')####保存时不要表头
+        print(info,"处理完")
+
+endtime = datetime.datetime.now()
+print(endtime - starttime)
