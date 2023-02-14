@@ -1,0 +1,14 @@
+##此代码用来合并同一文件夹下的所有csv文件，需要提前删除子文件的表头，合并之后可能出现内存过载情况，关掉jupyter重启可解决
+import os
+import pandas as pd
+import glob
+csv_list = glob.glob(r'F:\data\线路筛选子文件27\*.csv') #查看同文件夹下的csv文件数
+print(u'共发现%s个CSV文件'% len(csv_list))
+print(u'正在处理............')
+for i in csv_list: #循环读取同文件夹下的csv文件
+    fr = open(i,'rb').read()
+    #!!!!!
+    with open(r'F:\data\ALLROUTE\1027.csv','ab') as f: #将结果保存为result.csv
+        
+        f.write(fr)
+print(u'合并完毕！')
