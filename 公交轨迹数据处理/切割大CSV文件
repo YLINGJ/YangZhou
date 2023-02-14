@@ -1,0 +1,35 @@
+# -*- coding:utf-8 -*-
+##不知道总行数的情况下切割,注意只有第一个表有表头，需要后期处理
+def Main_split():
+    source = r'D:\test\GPS.csv'
+    # 此处一定要建上target文件夹，不然会报路径错误
+    target = r'F:\\data\\sub\\'
+    # 文件的行数的计数器
+    num = 0
+    # 文件序号
+    name_num = 1
+    # 用于存放数据
+    dataStore = []
+    
+    # 设置为UTF-8编码
+    with open(source, 'r', encoding='UTF-8') as file_content:
+        for line in file_content:
+            num += 1
+            dataStore.append(line)
+            # 设定每个文件为200万行
+            if num == 2000000:
+                with open(target + "target_list_" + str(name_num) + ".csv", 'w+') as file_target:
+                    for data in dataStore:
+                        file_target.write(data)
+                name_num += 1
+                num = 0
+                dataStore = []
+
+    # 处理最后一个文件，如果最后一个文件行数少于200万行，进行如下处理
+    with open(target + "target_list_" + str(name_num) + ".csv", 'w+') as file_target:
+        for data in dataStore:
+            file_target.write(data)
+
+
+if __name__ == "__main__":
+    Main_split()
